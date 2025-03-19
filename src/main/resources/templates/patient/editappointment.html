@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+     <title th:text="${title}">User Dashboard</title >
+     <link rel="stylesheet" th:href="@{/css/style.css}">
+     
+  </head>
+  
+  <body>
+  
+  
+    <!--   navbar     -->
+   
+	    
+	    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+		    <div class="container-fluid">
+		      <a class="navbar-brand" href="#"><i class="flaticon-pharmacy"></i><span>Re</span>Medic Hospital</a>
+		      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+		        <span class="oi oi-menu"></span> Menu
+		      </button>
+		
+		      <div class="collapse navbar-collapse" id="ftco-nav">
+		        <ul class="navbar-nav ms-auto">
+		          <li class="nav-item "><a th:href="@{/patient/index}" class="nav-link ">Home</a></li>
+		          <li class="nav-item "><a th:href="@{/patient/mydetails}" class="nav-link"><span th:text="${user.username}"></span></a></li>
+		          <li class="nav-item "><a th:href="@{/logout}"  class="nav-link">Logout</a></li>
+		          
+		        </ul>
+		      </div>
+		    </div>
+		  </nav>
+    
+      
+    
+	 
+	
+	 <!--   END of Navbar     -->
+	      
+	     
+	      
+	      <div class="sidebar">
+	      
+	          
+	           <a th:href="@{/patient/bookappointment}" class="item">Book Appointment</a>
+	           <a th:href="@{/patient/upcomingappointments}" class="item">Upcoming Appointments</a>
+	           <a th:href="@{/patient/previousappointments}" class="item">Previous Appointments</a>
+	           <a th:href="@{/patient/previousrecords}" class="item">Previous Records</a>
+	           <a th:href="@{/patient/mydetails}" class="item">My Details</a>
+	           <a th:href="@{/patient/mybills}" class="item">My Bills</a>
+	      
+	      
+	      </div>
+	     
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>	      
+<script>
+
+$(function(){
+
+  var dtToday = new Date();
+
+    var month = dtToday.getMonth() + 1;
+    
+    var month1 = dtToday.getMonth() + 1;
+    
+    var day = dtToday.getDate() + 1;
+    
+    var day1 = dtToday.getDate() + 14;
+    
+    var year = dtToday.getFullYear();
+
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+    
+    if(month1 < 10)
+        month1 = '0' + month1.toString();
+    if(day1 < 10)
+        day1 = '0' + day1.toString();
+     
+       
+    if(day1 > 30){
+        month1 = month1 + 1;
+        day1 = day1 - 30;        
+    }
+    
+    if(day1 < 10)
+        day1 = '0' + day1.toString();
+    
+    
+
+    var maxDate = year + '-' + month + '-' + day; 
+    var maxDate1 = year + '-' + month1 + '-' + day1;
+       
+    $('#appointmentDate_field').attr('min', maxDate);
+    $('#appointmentDate_field').attr('max', maxDate1);
+    
+
+})  
+	      
+</script>
+		 
+		 <!--   END of  sidebar    -->
+		 
+		 
+		 
+		<div class="content">
+		 
+		 <div class="container view-top"> 
+	         <div class="row"> 
+	            <div class="col-md-8 offset-md-2">
+	                
+	                <div class="my-card mt-3">  
+
+	                  <h3 class="text-center">Edit Department Details !!</h3>
+	                  
+	                  <div th:if="${session.message}" th:classappend="${session.message.type}"   role="alert">
+						  <p th:text="${session.message.content}"></p>
+						  <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+				     </div>
+	                  
+	                   <div class="container" > 
+	         
+	                  
+	                      <form method="post" th:action="@{'/patient/appointment/edit/' + ${appointment.appointmentId}}" th:object="${appointment}">
+	                      
+	                      
+	                
+		                      <div class="mb-3">
+		                       <tr>
+							    <label for="doctor_field" class="form-label">Select Doctor:</label>
+							    
+							    <td>
+							    
+							    <div class="dropdown">
+							    <select name="doctorId" class="form-control dropdown-toggle"  placeholder="Select doctor"  id="doctor_field" required>
+							         <option th:value="${appointment.doctor.doctorId}" th:text="${appointment.doctor.first_name} + ' ' + ${appointment.doctor.last_name}"></option>
+							         <option th:each="doctor : ${doctors}"
+							                 th:value="${doctor.doctorId}"
+							                 th:text="${doctor.first_name} + ' ' + ${doctor.last_name} + ', ' +  ${doctor.department.departmentName}" />
+							          							        							        
+							           							    
+							    </select>
+							    </div>
+							    
+							    </td>
+							    </tr>
+							  </div>	
+						  
+		                    
+		                      
+		                    
+		                      <div class="mb-3">
+		                      
+							    <label for="appointmentDate_field" class="form-label">Appointment Date:</label>
+							    
+							    <input 
+							    name="appointmentDate"
+							    type="date" 							   
+							    pattern="yyyy-MM-dd"
+							    class="form-control" 
+							    id="appointmentDate_field" 
+							    aria-describedby="appointmentDateHelp"
+							    placeholder="yyyy-MM-dd"
+							    required
+							    th:value="${appointment.appointmentDate}"
+							    >
+							    
+							  </div>
+							  
+							  
+							  
+							  <div class="mb-3">
+		                       <tr>
+							    <label for="appointmentTime_field" class="form-label">Select Appointment Time:</label>
+							    
+							    <td>
+							    
+							    <div class="dropdown">
+							    <select name="appointmentTime" class="form-control dropdown-toggle"  placeholder="Select Appointment Time"  id="appointmentTime_field" th:value="${appointment.appointmentTime}" required>
+							         <option th:value="${appointment.appointmentTime}" th:text="${appointment.appointmentTime}"></option>		
+							         <option th:value="'10:00AM-10:30AM'" th:text="'10:00AM-10:30AM'"></option>
+							         <option th:value="'10:30AM-11:00AM'" th:text="'10:30AM-11:00AM'"></option>
+							         <option th:value="'11:00AM-11:30AM'" th:text="'11:00AM-11:30AM'"></option>
+							         <option th:value="'11:30AM-12:00PM'" th:text="'11:30AM-12:00PM'"></option>
+							         <option th:value="'12:00PM-12:30PM'" th:text="'12:00PM-12:30PM'"></option>
+							         <option th:value="'12:30PM-1:00PM'" th:text="'12:30PM-1:00PM'"></option>
+							         <option th:value="'2:00PM-2:30PM'" th:text="'2:00PM-2:30PM'"></option>
+							         <option th:value="'2:30PM-3:00PM'" th:text="'2:30PM-3:00PM'"></option>
+							         <option th:value="'3:00PM-3:30PM'" th:text="'3:00PM-3:30PM'"></option>
+							         <option th:value="'3:30PM-4:00PM'" th:text="'3:30PM-4:00PM'"></option>
+							                 							        
+							           							    
+							    </select>
+							    </div>
+							    
+							    </td>
+							    </tr>
+							  </div>	
+							  
+							  
+							
+							  
+							  <div class="mb-3">
+		                      
+							    <label for="message_field" class="form-label">message:</label>
+							    
+							    <input 
+							    name="message"
+							    type="text" 
+							    class="form-control" 
+							    id="message_field" 
+							    aria-describedby="messageHelp"
+							    placeholder="Enter your message"
+							    required
+							    th:value="${appointment.message}"
+							    >
+							    
+							  </div>
+								
+							  
+						    <div class="container text-center">
+						     <button type="submit" class="btn btn-primary">Submit</button>
+						     <button type="reset" class="btn btn-primary">Reset</button>
+						    </div>
+					      </form >
+	                   </div >
+	                
+	                
+	            
+	                </div>
+	       
+	            </div >
+	       
+	        </div>
+		  </div >
+		 
+		 
+		 </div>
+		
+		
+	
+         <!--   END of  content   -->
+    
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+ 
+  </body>
+</html>

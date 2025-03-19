@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" xmlns:th"http://www.thymeleaf.org"  th:replace="base::layout(~{::section})">
+<head>
+   
+</head>
+  <body>
+   <section>
+     
+	   
+        <link rel="stylesheet" th:href="@{/css/contactstyle.css}">
+		
+		  <div class="container mt-5">
+		    <div class="content">
+		      <div class="left-side">
+		        <div class="address details">
+		          <i class="fas fa-map-marker-alt"></i>
+		          <div class="topic">Address</div>
+		          <div class="text-one">47/3, Arundelpet</div>
+		          <div class="text-two">Guntur, 522002</div>
+		        </div>
+		        <div class="phone details">
+		          <i class="fas fa-phone-alt"></i>
+		          <div class="topic">Phone</div>
+		          <div class="text-one">+91 9898935647</div>
+		          <div class="text-two">+91 9664345678</div>
+		        </div>
+		        <div class="email details">
+		          <i class="fas fa-envelope"></i>
+		          <div class="topic">Email</div>
+		          <div class="text-one">remedic@gmail.com</div>
+		          <div class="text-two">info.remedic@gmail.com</div>
+		        </div>
+		      </div>
+		      <div class="right-side">
+		        <div class="topic-text">Send us a message</div>
+		        <p>If you have any queries related to the hospital, you can send us message from here.</p>
+		         
+		             <div th:if="${session.message}" th:classappend="${session.message.type}" role="alert">
+						  <p th:text="${session.message.content}"></p>
+						  <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+				     </div>
+				  
+		      <form th:action="@{/postcontact}">
+		        <div class="input-box">
+		          <input type="text" placeholder="Enter your name">
+		        </div>
+		        <div class="input-box">
+		          <input type="text" placeholder="Enter your email">
+		        </div>
+		        <div class="input-box message-box">
+		         <input type="text" placeholder="Enter your message">
+		          
+		        </div>
+		        
+		        <button type="submit" class="btn btn-primary">Send Now</button>
+		      </form>
+		    </div>
+		    </div>
+		  </div>
+
+
+   
+   </section>
+  </body>
+</html>
+	 
+	
+	<!--   END of Navbar     -->
+	
+
+   
+    
+
+   

@@ -1,0 +1,19 @@
+body{
+	background: #c8e8e9!important;
+}
+
+body1{
+	background: #A9A9A9!important;
+}
+
+.banner1{
+	
+	width:100%;
+	height:93vh;
+	background:url(../img/bg_6.jpg);
+	background-size:cover;
+}
+
+.content{
+	margin-left:21%;
+}
